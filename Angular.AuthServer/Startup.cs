@@ -22,6 +22,15 @@ using Angular.AuthInfrastructure.Logging;
 using Angular.AuthInfrastructure.Services;
 using Angular.AuthServer;
 using Angular.AuthServer.Config;
+using Angular.AuthServer.UserManagementExtension;
+using Angular.Core.IDataService;
+using Angular.Core.IRepository;
+using Angular.Core.IRepository.Base;
+using Angular.Core.Modals.Identity;
+using Angular.Data.Context;
+using Angular.Data.Repository;
+using Angular.Data.Repository.@base;
+using BrockAllen.MembershipReboot;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
@@ -44,21 +53,29 @@ namespace Angular.AuthServer
             // uncomment to enable HSTS headers for the host
             // see: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
             //app.UseHsts();
-
+            var connectionString = "MembershipReboot";
             app.Map("/core", coreApp =>
                 {
                     var factory = InMemoryFactory.Create(
-                        users:   Users.Get(),
+                        users: Users.Get(),
                         clients: Clients.Get(),
-                        scopes:  Scopes.Get());
+                        scopes: Scopes.Get());
 
-                    factory.CustomGrantValidator = 
+                    factory.CustomGrantValidator =
                         new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator));
 
                     factory.ConfigureClientStoreCache();
                     factory.ConfigureScopeStoreCache();
                     factory.ConfigureUserServiceCache();
-
+                    factory.Register(new Registration<AngularContext>(resolver => new AngularContext()));
+                    factory.Register(new Registration<IDataContext, AngularContext>());
+                    factory.Register(new Registration<IUnitOfWorkAsync, UnitOfWork>());
+                    factory.Register(new Registration<IRepository<UserAccount>, Repository<UserAccount>>());
+                    factory.Register(new Registration<IUserAccountRepository, UserAccountRepository>());
+                    factory.Register(new Registration<UserAccountService>());
+                    factory.UserService = new Registration<IUserService, AngualrUserService>();
+                 //   var idSvrFactory = Factory.Configure();
+                    
                     var idsrvOptions = new IdentityServerOptions
                     {
                         Factory = factory,

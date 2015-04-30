@@ -23,18 +23,21 @@ namespace Angular.Console
         {
             var db = new AngularContext();
             var uow = new UnitOfWork(db);
-            var repo = new Repository<UserAccount>(db, uow);
+            var igenuser = new Repository<UserAccount>(db, uow);
+
+            var repo = new UserAccountRepository(igenuser,uow);
+            var mo = new MembershipRebootConfiguration(new SecuritySettings());
            // var serv = new Service<UserAccount>(repo);
+            var email = "user" + Guid.NewGuid().ToString("n") + "@me.com";
 
+            var usrv = new UserAccountService(mo,repo);
 
-            var usrv = new UserAccountService(new UserAccountRepository(repo));
+            usrv.CreateAccount("default", email, email, email);
 
-          //  usrv.CreateAccount("default", "me2@you.com", "me@you.com", "me@you.com");
+           uow.SaveChanges();
 
-        //    uow.SaveChanges();
-
-            var user = usrv.GetByEmail("default","me@you.com");
-            System.Console.WriteLine(user.ID);
+            var user = usrv.GetByEmail("default",email);
+            System.Console.WriteLine(user.ID.ToString("P"));
 
             System.Console.ReadLine();
 

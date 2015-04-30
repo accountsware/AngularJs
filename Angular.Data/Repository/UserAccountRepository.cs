@@ -14,10 +14,12 @@ namespace Angular.Data.Repository
     public class UserAccountRepository : IUserAccountRepository
     {
         private IRepository<UserAccount> _repository;
+        private readonly IUnitOfWork _uowWork;
 
-        public UserAccountRepository(IRepository<UserAccount> repository )
+        public UserAccountRepository(IRepository<UserAccount> repository, IUnitOfWork uowWork )
         {
             _repository = repository;
+            _uowWork = uowWork;
         }
 
 
@@ -30,7 +32,9 @@ namespace Angular.Data.Repository
         {
             _repository.Insert(item);
 
-        
+            _uowWork.SaveChanges();
+
+
         }
 
         public void Remove(UserAccount item)
