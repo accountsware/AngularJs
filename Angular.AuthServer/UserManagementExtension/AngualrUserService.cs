@@ -31,14 +31,14 @@ using ClaimsExtensions = BrockAllen.MembershipReboot.ClaimsExtensions;
 
 namespace Angular.AuthServer.UserManagementExtension
 {
-    public class AngularUserService : IUserService
+    public class AngualrUserService : IUserService
         
     {
         public string DisplayNameClaimType { get; set; }
 
         protected readonly UserAccountService userAccountService;
 
-        public AngularUserService(UserAccountService userAccountService)
+        public AngualrUserService(UserAccountService userAccountService)
         {
             if (userAccountService == null) throw new ArgumentNullException("userAccountService");
 

@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.ComponentModel;
 using Angular.Common;
 using Angular.Core.Modals;
 using Angular.Core.Modals.Base;
@@ -24,10 +23,9 @@ namespace Angular.Console
         {
             var db = new AngularContext();
             var uow = new UnitOfWork(db);
-            var igenuser = new Repository<UserAccount>(db);
-            var al = new AmbientDbContextLocator();  
+            var igenuser = new Repository<UserAccount>(db, uow);
 
-            var repo = new UserAccountRepository(al);
+            var repo = new UserAccountRepository(igenuser,uow);
             var mo = new MembershipRebootConfiguration(new SecuritySettings());
            // var serv = new Service<UserAccount>(repo);
             var email = "user" + Guid.NewGuid().ToString("n") + "@me.com";

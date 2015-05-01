@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Angular.Core.IRepository.Base;
 using Angular.Core.IServices;
 using Angular.Core.Modals;
-using Angular.Core.Modals.CustomerOrder;
 using Angular.Services.Base;
 
 namespace Angular.Services

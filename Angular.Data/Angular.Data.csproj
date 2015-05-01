@@ -55,19 +55,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Context\AmbientContextSuppressor.cs" />
-    <Compile Include="Context\AmbientDbContextLocator.cs" />
-    <Compile Include="Context\DbContextCollection.cs" />
-    <Compile Include="Context\DbContextReadOnlyScope.cs" />
-    <Compile Include="Context\DbContextScope.cs" />
-    <Compile Include="Context\DbContextScopeFactory.cs" />
-    <Compile Include="Context\DbContextScopeOption.cs" />
-    <Compile Include="Context\IAmbientDbContextLocator.cs" />
-    <Compile Include="Context\IDbContextCollection.cs" />
-    <Compile Include="Context\IDbContextFactory.cs" />
-    <Compile Include="Context\IDbContextReadOnlyScope.cs" />
-    <Compile Include="Context\IDbContextScope.cs" />
-    <Compile Include="Context\IDbContextScopeFactory.cs" />
     <Compile Include="CoreHelpers\StateHelper.cs" />
     <Compile Include="Context\AngularContext.cs" />
     <Compile Include="Context\DataContext.cs" />

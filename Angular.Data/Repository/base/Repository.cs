@@ -23,13 +23,14 @@ namespace Angular.Data.Repository.@base
 
         private readonly IDataContextAsync _context;
         private readonly DbSet<TEntity> _dbSet;
+        private readonly IUnitOfWorkAsync _unitOfWork;
 
         #endregion Private Fields
 
-        public Repository(IDataContextAsync context)
+        public Repository(IDataContextAsync context, IUnitOfWorkAsync unitOfWork)
         {
             _context = context;
-
+            _unitOfWork = unitOfWork;
 
             // Temporarily for FakeDbContext, Unit Test and Fakes
             var dbContext = context as DbContext;
@@ -120,13 +121,8 @@ namespace Angular.Data.Repository.@base
 
         public IRepository<T> GetRepository<T>() where T : class, IObjectState
         {
-            throw new NotImplementedException();
+            return _unitOfWork.Repository<T>();
         }
-
-        //public IRepository<T> GetRepository<T>() where T : class, IObjectState
-        //{
-        //    return _unitOfWork.Repository<T>();
-        //}
 
         public virtual async Task<TEntity> FindAsync(params object[] keyValues)
         {

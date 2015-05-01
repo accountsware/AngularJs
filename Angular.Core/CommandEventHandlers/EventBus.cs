@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Angular.Core.CommandEventHandlers
+namespace Angular.Core.IHandlers
 {
     public class EventBus : List<IEventHandler>, IEventBus
     {

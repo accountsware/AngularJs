@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace Angular.Core.CommandEventHandlers
+
+namespace Angular.Core.IHandlers
 {
     public class DelegateCommandHandler<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand

@@ -4,7 +4,7 @@
  */
 
 using System;
-using Angular.Core.CommandEventHandlers;
+using Angular.Core.IHandlers;
 
 namespace BrockAllen.MembershipReboot
 {

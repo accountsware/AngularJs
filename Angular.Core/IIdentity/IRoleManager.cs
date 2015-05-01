@@ -1,4 +1,4 @@
-﻿namespace Angular.Core.IIdentity
+﻿namespace AngularJs.Core.IIdentityManager
 {
     public interface IRoleManager
     {
