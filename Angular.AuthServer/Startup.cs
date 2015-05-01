@@ -20,6 +20,7 @@ using Angular.AuthInfrastructure.Configuration.AppBuilderExtensions;
 using Angular.AuthInfrastructure.Extensions;
 using Angular.AuthInfrastructure.Logging;
 using Angular.AuthInfrastructure.Services;
+using Angular.AuthInfrastructure.Services.InMemory;
 using Angular.AuthServer;
 using Angular.AuthServer.Config;
 using Angular.AuthServer.UserManagementExtension;
@@ -27,6 +28,7 @@ using Angular.Core.IDataService;
 using Angular.Core.IRepository;
 using Angular.Core.IRepository.Base;
 using Angular.Core.Modals.Identity;
+using Angular.Data;
 using Angular.Data.Context;
 using Angular.Data.Repository;
 using Angular.Data.Repository.@base;
@@ -56,25 +58,35 @@ namespace Angular.AuthServer
             var connectionString = "MembershipReboot";
             app.Map("/core", coreApp =>
                 {
-                    var factory = InMemoryFactory.Create(
-                        users: Users.Get(),
-                        clients: Clients.Get(),
-                        scopes: Scopes.Get());
+                    //var factory = InMemoryFactory.Create(
+                    //    users: Users.Get(),
+                    //    clients: Clients.Get(),
+                    //    scopes: Scopes.Get());
 
-                    factory.CustomGrantValidator =
-                        new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator));
+                    //factory.CustomGrantValidator =
+                    //    new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator));
 
-                    factory.ConfigureClientStoreCache();
-                    factory.ConfigureScopeStoreCache();
-                    factory.ConfigureUserServiceCache();
-                    factory.Register(new Registration<AngularContext>(resolver => new AngularContext()));
-                    factory.Register(new Registration<IDataContext, AngularContext>());
-                    factory.Register(new Registration<IUnitOfWorkAsync, UnitOfWork>());
-                    factory.Register(new Registration<IRepository<UserAccount>, Repository<UserAccount>>());
+                    //factory.ConfigureClientStoreCache();
+                    //factory.ConfigureScopeStoreCache();
+                    //factory.ConfigureUserServiceCache();
+                    var factory = new IdentityServerServiceFactory();
+
+                    var scopeStore = new InMemoryScopeStore(Scopes.Get());
+                    
+                    factory.ScopeStore = new Registration<IScopeStore>(resolver => scopeStore);
+
+                    var clientStore = new InMemoryClientStore(Clients.Get());
+                    factory.ClientStore = new Registration<IClientStore>(resolver => clientStore);
+                    factory.UserService = new Registration<IUserService, AngularUserService>();
+
+
                     factory.Register(new Registration<IUserAccountRepository, UserAccountRepository>());
-                    factory.Register(new Registration<UserAccountService>());
-                    factory.UserService = new Registration<IUserService, AngualrUserService>();
-                 //   var idSvrFactory = Factory.Configure();
+                    factory.Register(new Registration<IAmbientDbContextLocator, AmbientDbContextLocator>());
+
+                    factory.Register(new Registration<UserAccountService>());                    
+
+                    factory.Register(new Registration<AngularContext>(resolver => new AngularContext()));
+
                     
                     var idsrvOptions = new IdentityServerOptions
                     {

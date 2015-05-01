@@ -13,12 +13,12 @@ namespace Angular.AuthServer.Config
 {
     public static class UserServiceRegistrations
     {
-        public static void ConfigureCustomUserService(IdentityServerServiceFactory factory, string connString)
-        {
+        //public static void ConfigureCustomUserService(IdentityServerServiceFactory factory, string connString)
+        //{
             
 
 
-        }
+        //}
 
     }
 }
