@@ -28,7 +28,7 @@ namespace Angular.Console
             var repo = new UserAccountRepository(igenuser,uow);
             var mo = new MembershipRebootConfiguration(new SecuritySettings());
            // var serv = new Service<UserAccount>(repo);
-            var email = "user" + Guid.NewGuid().ToString("n") + "@me.com";
+            var email = "user" + Guid.NewGuid().ToString("n") + "@yourme.com";
 
             var usrv = new UserAccountService(mo,repo);
 
