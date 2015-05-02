@@ -16,7 +16,7 @@ namespace Angular.Data.Repository
         private IRepository<UserAccount> _repository;
         private readonly IUnitOfWork _uowWork;
 
-        public UserAccountRepository(IRepository<UserAccount> repository, IUnitOfWork uowWork )
+        public UserAccountRepository(IRepository<UserAccount> repository, IUnitOfWorkAsync uowWork )
         {
             _repository = repository;
             _uowWork = uowWork;

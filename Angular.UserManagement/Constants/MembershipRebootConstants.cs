@@ -23,7 +23,7 @@ namespace BrockAllen.MembershipReboot
             internal const bool EmailIsUnique = true;
             internal const bool UsernamesUniqueAcrossTenants = true;
             internal const bool RequireAccountVerification = true;
-            internal const bool AllowLoginAfterAccountCreation = false;
+            internal const bool AllowLoginAfterAccountCreation = true;
             internal const int AccountLockoutFailedLoginAttempts = 5;
             internal const string AccountLockoutDuration = "00:05:00";
             internal const bool AllowAccountDeletion = true;

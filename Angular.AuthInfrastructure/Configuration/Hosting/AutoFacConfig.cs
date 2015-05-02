@@ -138,6 +138,7 @@ namespace Angular.AuthInfrastructure.Configuration.Hosting
             builder.Register(c => new AntiForgeryToken(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
 
             // add any additional dependencies from hosting application
+           // builder.RegisterGeneric()
             foreach(var registration in fact.Registrations)
             {
                 builder.Register(registration, registration.Name);

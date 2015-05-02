@@ -569,7 +569,12 @@
       <DependentUpon>styles.css</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Angular.Core\Angular.Core.csproj">
+      <Project>{d5049b9c-d51d-4255-a334-22c5b1d5395a}</Project>
+      <Name>Angular.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
