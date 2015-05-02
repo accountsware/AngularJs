@@ -68,14 +68,13 @@ namespace Angular.AuthServer
                     factory.ConfigureScopeStoreCache();
                     factory.ConfigureUserServiceCache();
                     factory.UserService = new Registration<IUserService, AngularUserService>();
-                    factory.Register(new Registration<AngularContext>(resolver => new AngularContext()));
-                    factory.Register(new Registration<IDataContext, AngularContext>());
-                    factory.Register(new Registration<IUnitOfWorkAsync, UnitOfWork>());
-                    
-                    factory.Register(new Registration<IRepository<UserAccount>, Repository<UserAccount>>());
-                    factory.Register(new Registration<IUserAccountRepository, UserAccountRepository>());
+                    factory.Register(new Registration<Repository<UserAccount>>());
                     factory.Register(new Registration<UserAccountService>());
-                    
+                    factory.Register(new Registration<IUserAccountRepository, UserAccountRepository>());
+                    factory.Register(new Registration<IRepository<UserAccount>, Repository<UserAccount>>());
+                    factory.Register(new Registration<IUnitOfWorkAsync, UnitOfWork>());
+                    factory.Register(new Registration<IDataContext, AngularContext>());
+                    factory.Register(new Registration<AngularContext>(resolver => new AngularContext()));
                  //   var idSvrFactory = Factory.Configure();
                     
                     var idsrvOptions = new IdentityServerOptions
