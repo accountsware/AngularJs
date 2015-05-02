@@ -47,6 +47,7 @@ namespace Angular.Data.Repository
         {
 
         _repository.Update(item);
+        _uowWork.SaveChanges();
         }
 
         public UserAccount GetByID(Guid id)

@@ -32,9 +32,9 @@ namespace Angular.Console
 
             var usrv = new UserAccountService(mo,repo);
 
-            usrv.CreateAccount("default", email, email, email);
+            usrv.CreateAccount("default", email, "mypass", email);
 
-           uow.SaveChanges();
+       //    uow.SaveChanges();
 
             var user = usrv.GetByEmail("default",email);
             System.Console.WriteLine(user.ID.ToString("P"));

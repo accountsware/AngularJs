@@ -26,7 +26,7 @@ namespace BrockAllen.MembershipReboot
             internal const bool AllowLoginAfterAccountCreation = true;
             internal const int AccountLockoutFailedLoginAttempts = 5;
             internal const string AccountLockoutDuration = "00:05:00";
-            internal const bool AllowAccountDeletion = true;
+            internal const bool AllowAccountDeletion = false;
             internal const int PasswordHashingIterationCount = 0;
             internal const int PasswordResetFrequency = 0;
             internal const string VerificationKeyLifetime = "00:20:00";
