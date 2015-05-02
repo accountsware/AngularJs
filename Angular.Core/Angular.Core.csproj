@@ -76,6 +76,20 @@
     <Compile Include="Modals\CustomerOrder\Category.cs" />
     <Compile Include="Modals\CustomerOrder\Customer.cs" />
     <Compile Include="Modals\CustomerOrder\Employee.cs" />
+    <Compile Include="Modals\IdentityServerModals\Client.cs" />
+    <Compile Include="Modals\IdentityServerModals\ClientClaim.cs" />
+    <Compile Include="Modals\IdentityServerModals\ClientCorsOrigin.cs" />
+    <Compile Include="Modals\IdentityServerModals\ClientGrantTypeRestriction.cs" />
+    <Compile Include="Modals\IdentityServerModals\ClientIdPRestriction.cs" />
+    <Compile Include="Modals\IdentityServerModals\ClientPostLogoutRedirectUri.cs" />
+    <Compile Include="Modals\IdentityServerModals\ClientRedirectUri.cs" />
+    <Compile Include="Modals\IdentityServerModals\ClientScopeRestriction.cs" />
+    <Compile Include="Modals\IdentityServerModals\ClientSecret.cs" />
+    <Compile Include="Modals\IdentityServerModals\Consent.cs" />
+    <Compile Include="Modals\IdentityServerModals\Scope.cs" />
+    <Compile Include="Modals\IdentityServerModals\ScopeClaim.cs" />
+    <Compile Include="Modals\IdentityServerModals\Token.cs" />
+    <Compile Include="Modals\IdentityServerModals\TokenType.cs" />
     <Compile Include="Modals\Identity\LinkedAccountClaim.cs" />
     <Compile Include="Modals\CustomerOrder\Order.cs" />
     <Compile Include="Modals\CustomerOrder\OrderDetail.cs" />
@@ -95,7 +109,12 @@
     <Compile Include="Modals\Identity\VerificationKeyPurpose.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Angular.AuthInfrastructure\Angular.AuthInfrastructure.csproj">
+      <Project>{FB9E026E-BAB3-498A-A954-B93B05C146A5}</Project>
+      <Name>Angular.AuthInfrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>

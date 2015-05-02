@@ -56,6 +56,8 @@ namespace Angular.AuthServer
             var connectionString = "MembershipReboot";
             app.Map("/core", coreApp =>
                 {
+                    
+                  //  var efConfig = new entityframe
                     var factory = InMemoryFactory.Create(
                         users: Users.Get(),
                         clients: Clients.Get(),
