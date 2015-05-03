@@ -44,6 +44,10 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -84,6 +88,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Angular.AuthInfrastructure\Angular.AuthInfrastructure.csproj">
+      <Project>{FB9E026E-BAB3-498A-A954-B93B05C146A5}</Project>
+      <Name>Angular.AuthInfrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Angular.Common\Angular.Common.csproj">
       <Project>{83604bb2-2d75-40bb-be77-4f5569ad0ad2}</Project>
       <Name>Angular.Common</Name>

@@ -27,6 +27,7 @@ using Angular.Core.IDataService;
 using Angular.Core.IRepository;
 using Angular.Core.IRepository.Base;
 using Angular.Core.Modals.Identity;
+using Angular.Data;
 using Angular.Data.Context;
 using Angular.Data.Repository;
 using Angular.Data.Repository.@base;
