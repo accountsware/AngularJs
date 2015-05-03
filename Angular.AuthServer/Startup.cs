@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Linq;
+using Angular.Auth.Data;
+using Angular.Auth.Data.DbContexts;
+using Angular.Auth.Data.Extensions;
 using Angular.AuthInfrastructure.App_Packages.LibLog._2._0;
 using Angular.AuthInfrastructure.Configuration;
 using Angular.AuthInfrastructure.Configuration.AppBuilderExtensions;
 using Angular.AuthInfrastructure.Extensions;
 using Angular.AuthInfrastructure.Logging;
+using Angular.AuthInfrastructure.Models;
 using Angular.AuthInfrastructure.Services;
 using Angular.AuthServer;
 using Angular.AuthServer.Config;
@@ -44,133 +50,168 @@ using Owin;
 
 namespace Angular.AuthServer
 {
-    public class Startup
-    {
-        public void Configuration(IAppBuilder app)
-        {
-            LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
-            //LogProvider.SetCurrentLogProvider(new TraceSourceLogProvider());
+	public class Startup
+	{
+		public void Configuration(IAppBuilder app)
+		{
+			LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
+			//LogProvider.SetCurrentLogProvider(new TraceSourceLogProvider());
 
-            // uncomment to enable HSTS headers for the host
-            // see: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
-            //app.UseHsts();
-            var connectionString = "MembershipReboot";
-            app.Map("/core", coreApp =>
-                {
-                    
-                  //  var efConfig = new entityframe
-                    var factory = InMemoryFactory.Create(
-                        users: Users.Get(),
-                        clients: Clients.Get(),
-                        scopes: Scopes.Get());
+			// uncomment to enable HSTS headers for the host
+			// see: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
+			//app.UseHsts();
+			app.Map("/core", coreApp =>
+			{
 
-                    factory.CustomGrantValidator =
-                        new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator));
-
-                    factory.ConfigureClientStoreCache();
-                    factory.ConfigureScopeStoreCache();
-                    factory.ConfigureUserServiceCache();
-                    factory.UserService = new Registration<IUserService, AngularUserService>();
-                    
-                    factory.Register(new Registration<UserAccountService>());
-                    factory.Register(new Registration<IUserAccountRepository, UserAccountRepository>());
-                    factory.Register(new Registration<IRepository<UserAccount>, Repository<UserAccount>>());
-                    factory.Register(new Registration<IUnitOfWorkAsync, UnitOfWork>());
-                    factory.Register(new Registration<IDataContextAsync, AngularContext>());
-                    factory.Register(new Registration<AngularContext>(resolver => new AngularContext()));
-                 //   var idSvrFactory = Factory.Configure();
-                    
-                    var idsrvOptions = new IdentityServerOptions
-                    {
-                        Factory = factory,
-                        SigningCertificate = Cert.Load(),
-
-                        CorsPolicy = CorsPolicy.AllowAll,
-
-                        AuthenticationOptions = new AuthenticationOptions 
-                        {
-                            IdentityProviders = ConfigureIdentityProviders,
-                        },
-
-                        LoggingOptions = new LoggingOptions
-                        {
-                            //EnableHttpLogging = true, 
-                            //EnableWebApiDiagnostics = true,
-                            //IncludeSensitiveDataInLogs = true
-                        },
-
-                        EventsOptions = new EventsOptions
-                        {
-                            RaiseFailureEvents = true,
-                            RaiseInformationEvents = true,
-                            RaiseSuccessEvents = true,
-                            RaiseErrorEvents = true
-                        }
-
-                    };
-                    idsrvOptions.SiteName = "Angular Auth Server";
-                    coreApp.UseIdentityServer(idsrvOptions);
-                });
-        }
-
-        public static void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)
-        {
-            var google = new GoogleOAuth2AuthenticationOptions
-            {
-                AuthenticationType = "Google",
-                Caption = "Google",
-                SignInAsAuthenticationType = signInAsType,
+				var efConfig = new EntityFrameworkServiceOptions { ConnectionString = "data source=.;initial catalog=Angular;integrated security=True" };
+					
                 
-                ClientId = "767400843187-8boio83mb57ruogr9af9ut09fkg56b27.apps.googleusercontent.com",
-                ClientSecret = "5fWcBT0udKY7_b6E3gEiJlze"
-            };
-            app.UseGoogleAuthentication(google);
+                //var factory = InMemoryFactory.Create(
+                //        users: Users.Get(),
+                //        clients: Clients.Get(),
+                //        scopes: Scopes.Get());
+                var factory = new IdentityServerServiceFactory();
+					factory.CustomGrantValidator =
+						new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator));
 
-            var fb = new FacebookAuthenticationOptions
-            {
-                AuthenticationType = "Facebook",
-                Caption = "Facebook",
-                SignInAsAuthenticationType = signInAsType,
-                
-                AppId = "676607329068058",
-                AppSecret = "9d6ab75f921942e61fb43a9b1fc25c63"
-            };
-            app.UseFacebookAuthentication(fb);
+				   // factory.ConfigureClientStoreCache();
+				   //factory.ConfigureScopeStoreCache();
+				   //factory.ConfigureUserServiceCache();
+					ConfigureClients(Clients.Get(), efConfig);
+					ConfigureScopes(Scopes.Get(), efConfig);
+				factory.RegisterConfigurationServices(efConfig);
+				factory.RegisterOperationalServices(efConfig);
+					factory.UserService = new Registration<IUserService, AngularUserService>();
+					
+					factory.Register(new Registration<UserAccountService>());
+					factory.Register(new Registration<IUserAccountRepository, UserAccountRepository>());
+					factory.Register(new Registration<IRepository<UserAccount>, Repository<UserAccount>>());
+					factory.Register(new Registration<IUnitOfWorkAsync, UnitOfWork>());
+					factory.Register(new Registration<IDataContextAsync, AngularContext>());
+					factory.Register(new Registration<AngularContext>(resolver => new AngularContext()));
+				 //   var idSvrFactory = Factory.Configure();
+					
+					var idsrvOptions = new IdentityServerOptions
+					{
+						Factory = factory,
+						SigningCertificate = Cert.Load(),
 
-            var twitter = new TwitterAuthenticationOptions
-            {
-                AuthenticationType = "Twitter",
-                Caption = "Twitter",
-                SignInAsAuthenticationType = signInAsType,
-                
-                ConsumerKey = "N8r8w7PIepwtZZwtH066kMlmq",
-                ConsumerSecret = "df15L2x6kNI50E4PYcHS0ImBQlcGIt6huET8gQN41VFpUCwNjM"
-            };
-            app.UseTwitterAuthentication(twitter);
+						CorsPolicy = CorsPolicy.AllowAll,
 
-            var adfs = new WsFederationAuthenticationOptions
-            {
-                AuthenticationType = "adfs",
-                Caption = "ADFS",
-                SignInAsAuthenticationType = signInAsType,
+						AuthenticationOptions = new AuthenticationOptions 
+						{
+							IdentityProviders = ConfigureIdentityProviders,
+						},
 
-                MetadataAddress = "https://adfs.leastprivilege.vm/federationmetadata/2007-06/federationmetadata.xml",
-                Wtrealm = "urn:idsrv3"
-            };
-            app.UseWsFederationAuthentication(adfs);
+						LoggingOptions = new LoggingOptions
+						{
+							//EnableHttpLogging = true, 
+							//EnableWebApiDiagnostics = true,
+							//IncludeSensitiveDataInLogs = true
+						},
 
-            var aad = new OpenIdConnectAuthenticationOptions
-            {
-                AuthenticationType = "aad",
-                Caption = "Azure AD",
-                SignInAsAuthenticationType = signInAsType,
+						EventsOptions = new EventsOptions
+						{
+							RaiseFailureEvents = true,
+							RaiseInformationEvents = true,
+							RaiseSuccessEvents = true,
+							RaiseErrorEvents = true
+						}
 
-                Authority = "https://login.windows.net/4ca9cb4c-5e5f-4be9-b700-c532992a3705",
-                ClientId = "65bbbda8-8b85-4c9d-81e9-1502330aacba",
-                RedirectUri = "https://localhost:44333/core/aadcb"
-            };
+					};
+					idsrvOptions.SiteName = "Angular Auth Server";
+					coreApp.UseIdentityServer(idsrvOptions);
+				});
+		}
+		public static void ConfigureClients(IEnumerable<Client> clients, EntityFrameworkServiceOptions options)
+		{
+			using (var db = new ClientConfigurationDbContext(options.ConnectionString, options.Schema))
+			{
+				if (!db.Clients.Any())
+				{
+					foreach (var c in clients)
+					{
+						var e = c.ToEntity();
+						db.Clients.Add(e);
+					}
+					db.SaveChanges();
+				}
+			}
+		}
 
-            app.UseOpenIdConnectAuthentication(aad);
-        }
-    }
+		public static void ConfigureScopes(IEnumerable<Scope> scopes, EntityFrameworkServiceOptions options)
+		{
+			using (var db = new ScopeConfigurationDbContext(options.ConnectionString, options.Schema))
+			{
+				if (!db.Scopes.Any())
+				{
+					foreach (var s in scopes)
+					{
+						var e = s.ToEntity();
+						db.Scopes.Add(e);
+					}
+					db.SaveChanges();
+				}
+			}
+		}
+		public static void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)
+		{
+			var google = new GoogleOAuth2AuthenticationOptions
+			{
+				AuthenticationType = "Google",
+				Caption = "Google",
+				SignInAsAuthenticationType = signInAsType,
+				
+				ClientId = "767400843187-8boio83mb57ruogr9af9ut09fkg56b27.apps.googleusercontent.com",
+				ClientSecret = "5fWcBT0udKY7_b6E3gEiJlze"
+			};
+			app.UseGoogleAuthentication(google);
+
+			var fb = new FacebookAuthenticationOptions
+			{
+				AuthenticationType = "Facebook",
+				Caption = "Facebook",
+				SignInAsAuthenticationType = signInAsType,
+				
+				AppId = "676607329068058",
+				AppSecret = "9d6ab75f921942e61fb43a9b1fc25c63"
+			};
+			app.UseFacebookAuthentication(fb);
+
+			var twitter = new TwitterAuthenticationOptions
+			{
+				AuthenticationType = "Twitter",
+				Caption = "Twitter",
+				SignInAsAuthenticationType = signInAsType,
+				
+				ConsumerKey = "N8r8w7PIepwtZZwtH066kMlmq",
+				ConsumerSecret = "df15L2x6kNI50E4PYcHS0ImBQlcGIt6huET8gQN41VFpUCwNjM"
+			};
+			app.UseTwitterAuthentication(twitter);
+
+			var adfs = new WsFederationAuthenticationOptions
+			{
+				AuthenticationType = "adfs",
+				Caption = "ADFS",
+				SignInAsAuthenticationType = signInAsType,
+
+				MetadataAddress = "https://adfs.leastprivilege.vm/federationmetadata/2007-06/federationmetadata.xml",
+				Wtrealm = "urn:idsrv3"
+			};
+			app.UseWsFederationAuthentication(adfs);
+
+			var aad = new OpenIdConnectAuthenticationOptions
+			{
+				AuthenticationType = "aad",
+				Caption = "Azure AD",
+				SignInAsAuthenticationType = signInAsType,
+
+				Authority = "https://login.windows.net/4ca9cb4c-5e5f-4be9-b700-c532992a3705",
+				ClientId = "65bbbda8-8b85-4c9d-81e9-1502330aacba",
+				RedirectUri = "https://localhost:44333/core/aadcb"
+			};
+
+			app.UseOpenIdConnectAuthentication(aad);
+		}
+	}
 }

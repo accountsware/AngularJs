@@ -162,6 +162,10 @@
     <Compile Include="UserManagementSettings\UserManagementConfigurations.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Angular.Auth.Data\Angular.Auth.Data.csproj">
+      <Project>{d4c0430d-3b41-422a-b1a6-ba6c68400ff1}</Project>
+      <Name>Angular.Auth.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Angular.AuthInfrastructure\Angular.AuthInfrastructure.csproj">
       <Project>{fb9e026e-bab3-498a-a954-b93b05c146a5}</Project>
       <Name>Angular.AuthInfrastructure</Name>
